@@ -7,7 +7,7 @@ TARGET = connect4
 CFILES = main.c connect4.c
 OFILES = ${CFILES:.c=.o}
 
-all: ${OFILES}
+connect4: ${OFILES}
 	$(CC) $(CFLAGS) -o ${TARGET} ${OFILES}
 
 clean:
