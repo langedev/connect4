@@ -4,9 +4,9 @@
 #include <stddef.h>
 
 enum Tile {
+  BLACK = -1,
   EMPTY = 0,
-  RED,
-  BLACK
+  RED = 1,
 };
 
 struct Board {
@@ -17,7 +17,7 @@ struct Board {
   enum Tile next_player;
 };
 
-#define IDX(i, j, board) (board->tilemap[j*(board->height) + i])
+#define IDX(i, j, board) (board->tilemap[j*(board->width) + i])
 
 // Returns a board struct with height and width based on parameters
 struct Board *make_board(size_t height, size_t width);

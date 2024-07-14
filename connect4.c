@@ -29,15 +29,41 @@ out_tilemap:
 }
 
 int drop_tile(struct Board *board, size_t drop_pos) {
+  if (drop_pos >= board->width)
+    return -1;
+
+  size_t tower_height = board->height-board->tile_heights[drop_pos]-1;
+
+  if (tower_height < 0)
+    return -1;
+  
+  IDX(drop_pos, tower_height, board) = board->next_player;
+
+  board->tile_heights[drop_pos]++;
+  board->next_player *= -1;
+
+  // Check if player won in separate function
+
   return 0;
 }
 
 void print_board(struct Board *board) {
   for (int j = 0; j < board->height; j++) {
+    printf("|");
     for (int i = 0; i < board->width; i++) {
-      printf("%d", IDX(i, j, board));
+      switch (IDX(i,j,board)) {
+      case BLACK:
+        printf("\033[90m");
+        break;
+      case RED:
+        printf("\033[31m");
+        break;
+      case EMPTY:
+        printf("\033[36m");
+      }
+      printf("O");
     }
-    printf("\n");
+    printf("\033[0m|\n");
   }
-
+  printf("\n");
 }
