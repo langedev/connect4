@@ -74,11 +74,75 @@ int check_for_win_vertical(struct Board *board, size_t pos_i, size_t pos_j)
   return 0;
 }
 
+int check_for_win_lr_diagonal(struct Board *board, size_t pos_i, size_t pos_j)
+{
+  enum Tile current_player = board->next_player * -1;
+  char in_a_row = 1;
+  // Down-right
+  size_t npos_i = pos_i + 1;
+  size_t npos_j = pos_j + 1;
+  while (npos_i < board->width && npos_j < board->height &&
+      IDX(npos_i, npos_j, board) == current_player) {
+    in_a_row++;
+    npos_i++;
+    npos_j++;
+    if (in_a_row >= 4)
+      return 1;
+  }
+  // Up-left
+  npos_i = pos_i - 1;
+  npos_j = pos_j - 1;
+  while (npos_i < board->width && npos_j < board->height &&
+      IDX(npos_i, npos_j, board) == current_player) {
+    in_a_row++;
+    npos_i--;
+    npos_j--;
+    if (in_a_row >= 4)
+      return 1;
+  }
+
+  return 0;
+}
+
+int check_for_win_rl_diagonal(struct Board *board, size_t pos_i, size_t pos_j)
+{
+  enum Tile current_player = board->next_player * -1;
+  char in_a_row = 1;
+  // Down-left
+  size_t npos_i = pos_i - 1;
+  size_t npos_j = pos_j + 1;
+  while (npos_i < board->width && npos_j < board->height &&
+      IDX(npos_i, npos_j, board) == current_player) {
+    in_a_row++;
+    npos_i--;
+    npos_j++;
+    if (in_a_row >= 4)
+      return 1;
+  }
+  // Up-right
+  npos_i = pos_i + 1;
+  npos_j = pos_j - 1;
+  while (npos_i < board->width && npos_j < board->height &&
+      IDX(npos_i, npos_j, board) == current_player) {
+    in_a_row++;
+    npos_i++;
+    npos_j--;
+    if (in_a_row >= 4)
+      return 1;
+  }
+
+  return 0;
+}
+
 int check_for_win(struct Board *board, size_t pos_i, size_t pos_j)
 {
   if (check_for_win_horizontal(board, pos_i, pos_j))
       return 1;
   if (check_for_win_vertical(board, pos_i, pos_j))
+      return 1;
+  if (check_for_win_lr_diagonal(board, pos_i, pos_j))
+      return 1;
+  if (check_for_win_rl_diagonal(board, pos_i, pos_j))
       return 1;
   return 0;
 }
