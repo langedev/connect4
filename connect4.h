@@ -22,6 +22,8 @@ struct Board {
 // Returns a board struct with height and width based on parameters
 struct Board *make_board(size_t height, size_t width);
 
+void free_board(struct Board *board);
+
 // Drops a tile, returns 0 if successful, -1 if error, and 1 if the move won
 int drop_tile(struct Board *board, size_t drop_pos);
 

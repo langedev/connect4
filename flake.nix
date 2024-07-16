@@ -17,11 +17,13 @@
       git
       gnumake
       gcc
-      gdb
       clang_16
       clang-tools_16
       lld_16
       llvmPackages_16.libllvm
+      
+      valgrind
+      gdb
 
       cmake
       gtest

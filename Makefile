@@ -1,14 +1,16 @@
 CC = gcc
 CFLAGS = -g -Wall -pedantic
 
-connect4.c main.c: connect4.h
+test_connect4.c connect4.c main.c: connect4.h
 
-TARGET = connect4
 CFILES = main.c connect4.c
 OFILES = ${CFILES:.c=.o}
 
 connect4: ${OFILES}
-	$(CC) $(CFLAGS) -o ${TARGET} ${OFILES}
+	$(CC) $(CFLAGS) -o connect4 ${OFILES}
+
+test_connect4: test_connect4.o connect4.o
+	$(CC) $(CFLAGS) -o test_connect4 test_connect4.o connect4.o
 
 clean:
-	rm -r ${TARGET} ${OFILES}
+	rm -r connect4 test_connect4 *.o
