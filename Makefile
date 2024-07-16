@@ -1,16 +1,39 @@
+BIN = bin
+SRC = src
+TST = tests
+INC = inc
+
 CC = gcc
-CFLAGS = -g -Wall -pedantic
+CFLAGS = -g -Wall -pedantic -I$(INC)
 
-test_connect4.c connect4.c main.c: connect4.h
+CSRCFILES = $(wildcard $(SRC)/*.c)
+OSRCFILES = $(patsubst %,$(BIN)/%,$(notdir $(CSRCFILES:.c=.o)))
+MAIN = $(BIN)/main.o
+OSRCFILESNOMAIN = $(filter-out $(MAIN),$(OSRCFILES))
 
-CFILES = main.c connect4.c
-OFILES = ${CFILES:.c=.o}
+CTSTFILES = $(wildcard $(TST)/*.c)
+OTSTFILES = $(patsubst %,$(BIN)/%,$(notdir $(CTSTFILES:.c=.o)))
 
-connect4: ${OFILES}
-	$(CC) $(CFLAGS) -o connect4 ${OFILES}
+$(BIN)/%.o: $(SRC)/%.c
+	mkdir -p "$(BIN)"
+	$(CC) $(CFLAGS) -c $< -o $@
 
-test_connect4: test_connect4.o connect4.o
-	$(CC) $(CFLAGS) -o test_connect4 test_connect4.o connect4.o
+$(BIN)/%.o: $(TST)/%.c
+	mkdir -p "$(BIN)"
+	$(CC) $(CFLAGS) -c $< -o $@
+
+all: connect4
+
+connect4: ${OSRCFILES}
+	$(CC) $(CFLAGS) -o connect4 ${OSRCFILES}
+
+tests: ${OTSTFILES} ${OSRCFILESNOMAIN}
+	$(CC) $(CFLAGS) -o test_connect4 ${OTSTFILES} ${OSRCFILESNOMAIN}
+
+tests/test_connect4.c src/connect4.c src/main.c: inc/connect4.h
 
 clean:
-	rm -r connect4 test_connect4 *.o
+	rm -r connect4 test_connect4 bin
+
+help:
+	@echo "src: ${CSRCFILES} | ${OSRCFILES} | ${OSRCFILESNOMAIN} | ${CTSTFILES} | ${OTSTFILES}"
